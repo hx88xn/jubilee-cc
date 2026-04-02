@@ -1,5 +1,6 @@
 import os
 import json
+import traceback
 import base64
 import asyncio
 from websockets.asyncio.client import connect as ws_connect
@@ -367,7 +368,12 @@ async def media_stream_browser(websocket: WebSocket):
 
             print(f"📝 Transcripts saved for call {call_id}")
 
-            await analyze_call_with_llm(call_id, user_transcript, agent_transcript)
+            try:
+                analysis_result = await analyze_call_with_llm(call_id, user_transcript, agent_transcript)
+                print(f"📊 Call analysis complete: {analysis_result}")
+            except Exception as e:
+                print(f"⚠️ Call analysis failed: {e}")
+                traceback.print_exc()
 
             with open(f"recordings/{call_id}_transcript.json", "w", encoding="utf-8") as f:
                 json.dump(transcripts_output, f, ensure_ascii=False, indent=2)
