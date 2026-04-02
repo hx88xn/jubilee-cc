@@ -1,0 +1,13 @@
+services:
+  voice-agent:
+    build: .
+    ports:
+      - "7009:7009"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - JWT_SECRET_KEY=jubilee-life-voice-agent-secret-2026
+      - PORT=7009
+    volumes:
+      - ./recordings:/app/recordings
+      - ./static:/app/static
+    restart: unless-stopped
